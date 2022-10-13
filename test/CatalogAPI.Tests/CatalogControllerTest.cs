@@ -2,27 +2,36 @@ namespace CatalogAPI.Tests
 {
     public class CatalogControllerTest
     {
-        private CatalogController _catalogController;
-        private Mock<IProductService> _productService;
+        private CatalogController? _catalogController;
+        private Mock<IProductService> _mockProductService;
         // private ILogger<CatalogController> _logger;
         public CatalogControllerTest()
         {
-            _productService = new Mock<IProductService>();
-            List<Product> products = new List<Product>();
-            products.Add(new Product { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F });
-            _productService.Setup(x => x.GetProducts()).Returns(() => products);
-            _catalogController = new CatalogController(_productService.Object);
+            _mockProductService = new Mock<IProductService>();
         }
 
         [Fact]
-        public void GetProducts_ShouldReturnProductList()
+        public void GetAllProducts_ReturnsCorrectType_WhenDBHasResource()
         {
-            var result = _catalogController.GetProducts();
+            var products = new List<Product>() { new Product() };// { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F } };
+            _mockProductService.Setup(x => x.GetAllProducts()).Returns(() => new List<Product> { new Product() { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F } });
+            _catalogController = new CatalogController(_mockProductService.Object);
+
+            var result = _catalogController.GetAllProducts();
 
             Assert.NotNull(result);
             Assert.IsType<ActionResult<IEnumerable<Product>>>(result);
-            // Assert.IsType<IEnumerable<Product>>(result.Value);
-            // Assert.Equal("Basketball", result?.FirstOrDefault<Product>()?.Name);
+            Assert.IsType<OkObjectResult>(result.Result);
+            // Assert.IsType<IEnumerable<Product>?>(result.Value);
+            // Assert.Equal("Basketball", result.Value?.FirstOrDefault<Product>()?.Name);
         }
+
+        [Fact]
+        public void GetProductById_ReturnsCorrectType_WhenExistentResourceIdSubmitted()
+        {
+            // var result = _catalogController.GetProductById();
+
+        }
+
     }
 }

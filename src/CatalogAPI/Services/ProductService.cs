@@ -8,9 +8,14 @@ namespace CatalogAPI.Services
         {
             _productRepository = productRepository;
         }
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<Product> GetAllProducts()
         {
-            return _productRepository.GetProducts();
+            return _productRepository.GetAllProducts();
+        }
+
+        public Product GetProductById(long productId)
+        {
+            return _productRepository.GetProductById(productId);
         }
     }
 }

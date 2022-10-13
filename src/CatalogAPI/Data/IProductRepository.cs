@@ -2,6 +2,7 @@ namespace CatalogAPI.Data
 {
     public interface IProductRepository
     {
-        List<Product> GetProducts();
+        List<Product> GetAllProducts();
+        Product GetProductById(long productId);
     }
 }

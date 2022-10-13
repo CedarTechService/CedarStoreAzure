@@ -2,6 +2,7 @@ namespace CatalogAPI.Services
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetAllProducts();
+        Product GetProductById(long productId);
     }
 }

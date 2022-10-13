@@ -11,9 +11,11 @@ namespace CatalogAPI.Controllers
             _productService = productService;
         }
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> GetProducts()
+        public ActionResult<IEnumerable<Product>> GetAllProducts()
         {
-            return new OkObjectResult(_productService.GetProducts());
+            return Ok(_productService.GetAllProducts());
         }
+
+
     }
 }
