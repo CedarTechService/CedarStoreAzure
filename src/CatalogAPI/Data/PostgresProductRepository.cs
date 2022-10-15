@@ -1,6 +1,6 @@
 namespace CatalogAPI.Data
 {
-    public class ProductRepository : IProductRepository
+    public class PostgresProductRepository : IProductRepository
     {
         public List<Product> GetAllProducts()
         {
