@@ -2,12 +2,18 @@ namespace CatalogAPI.Tests
 {
     public class CatalogControllerTest
     {
-        private CatalogController? _catalogController;
-        private Mock<IProductService> _mockProductService;
+        private readonly CatalogController? _catalogController;
+        private readonly Mock<IProductService> _mockProductService;
+        private readonly IMapper _mapper;
         // private ILogger<CatalogController> _logger;
         public CatalogControllerTest()
         {
             _mockProductService = new Mock<IProductService>();
+
+            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile(new ProductsProfile()));
+            _mapper = mapperConfig.CreateMapper();
+
+            _catalogController = new CatalogController(productService: _mockProductService.Object, mapper: _mapper);
         }
 
         [Fact]
@@ -15,13 +21,12 @@ namespace CatalogAPI.Tests
         {
             var products = new List<Product>() { new Product() };// { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F } };
             _mockProductService.Setup(x => x.GetAllProducts()).Returns(() => new List<Product> { new Product() { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F } });
-            _catalogController = new CatalogController(_mockProductService.Object);
 
-            var result = _catalogController.GetAllProducts();
+            var result = _catalogController?.GetAllProducts();
 
             Assert.NotNull(result);
-            Assert.IsType<ActionResult<IEnumerable<Product>>>(result);
-            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsType<ActionResult<IEnumerable<ProductReadDto>>>(result);
+            Assert.IsType<OkObjectResult>(result?.Result);
             // Assert.IsType<IEnumerable<Product>?>(result.Value);
             // Assert.Equal("Basketball", result.Value?.FirstOrDefault<Product>()?.Name);
         }

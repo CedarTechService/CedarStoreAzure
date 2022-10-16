@@ -17,6 +17,8 @@ connStringBuilder.Username = builder.Configuration["UserID"];
 connStringBuilder.Password = builder.Configuration["Password"];
 builder.Services.AddDbContext<ProductContext>(opt => opt.UseNpgsql(connStringBuilder.ConnectionString));
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
