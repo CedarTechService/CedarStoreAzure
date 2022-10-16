@@ -22,7 +22,7 @@ namespace CatalogAPI.Tests
             var result = _productService.GetProductById(1);
 
             Assert.IsType<Product>(result);
-            Assert.Equal(1, result.Id);
+            Assert.Equal(1, result?.Id);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace CatalogAPI.Tests
             var result = _productService.GetAllProducts();
 
             Assert.IsType<List<Product>>(result);
-            Assert.Equal("Basketball", result.FirstOrDefault()?.Name);
+            Assert.Equal("Basketball", result?.FirstOrDefault()?.Name);
         }
 
 

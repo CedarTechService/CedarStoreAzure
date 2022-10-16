@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, PostgresProductRepository>();
 
-builder.Services.AddDbContext<ProductContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection")));
+var connStringBuilder = new NpgsqlConnectionStringBuilder();
+connStringBuilder.ConnectionString = builder.Configuration.GetConnectionString("PostgreSqlConnection");
+connStringBuilder.Username = builder.Configuration["UserID"];
+connStringBuilder.Password = builder.Configuration["Password"];
+builder.Services.AddDbContext<ProductContext>(opt => opt.UseNpgsql(connStringBuilder.ConnectionString));
 
 var app = builder.Build();
 

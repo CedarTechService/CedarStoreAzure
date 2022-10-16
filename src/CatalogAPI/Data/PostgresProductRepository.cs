@@ -2,14 +2,14 @@ namespace CatalogAPI.Data
 {
     public class PostgresProductRepository : IProductRepository
     {
-        public List<Product> GetAllProducts()
-        {
-            throw new NotImplementedException();
-        }
+        private ProductContext _context;
+        public PostgresProductRepository(ProductContext context) => _context = context;
 
-        public Product GetProductById(long productId)
+        public List<Product>? GetAllProducts() => _context.ProductItems?.ToList<Product>();
+
+        public Product? GetProductById(long productId)
         {
-            throw new NotImplementedException();
+            return _context.ProductItems?.FirstOrDefault(p => p.Id == productId);
         }
     }
 }
