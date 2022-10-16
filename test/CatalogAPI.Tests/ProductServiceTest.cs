@@ -4,16 +4,17 @@ namespace CatalogAPI.Tests
     {
         IProductService _productService;
         Mock<IProductRepository> _productRepository;
-        Product product = new Product { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F };
-        List<Product> products;
+        private readonly IMapper _mapper;
 
         public ProductServiceTest()
         {
-            products = new List<Product> { product };
+            var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile(new ProductsProfile()));
+            _mapper = mapperConfig.CreateMapper();
+
             _productRepository = new Mock<IProductRepository>();
-            _productRepository.Setup(x => x.GetAllProducts()).Returns(products);
-            _productRepository.Setup(x => x.GetProductById(1)).Returns(product);
-            _productService = new ProductService(_productRepository.Object);
+            _productRepository.Setup(x => x.GetAllProducts()).Returns(() => new List<Product> { new Product() { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F }, new Product() { Id = 2, Name = "Football", Category = "Sports", Price = 29.99F } });
+            _productRepository.Setup(x => x.GetProductById(1)).Returns(new Product() { Id = 1, Name = "Basketball", Category = "Sports", Price = 12.50F });
+            _productService = new ProductService(productRepository: _productRepository.Object, mapper: _mapper);
         }
 
         [Fact]
@@ -21,7 +22,7 @@ namespace CatalogAPI.Tests
         {
             var result = _productService.GetProductById(1);
 
-            Assert.IsType<Product>(result);
+            Assert.IsType<ProductReadDto>(result);
             Assert.Equal(1, result?.Id);
         }
 
@@ -38,7 +39,7 @@ namespace CatalogAPI.Tests
         {
             var result = _productService.GetAllProducts();
 
-            Assert.IsType<List<Product>>(result);
+            Assert.IsType<List<ProductReadDto>>(result);
             Assert.Equal("Basketball", result?.FirstOrDefault()?.Name);
         }
 

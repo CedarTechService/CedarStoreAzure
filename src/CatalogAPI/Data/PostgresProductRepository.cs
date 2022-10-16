@@ -7,9 +7,6 @@ namespace CatalogAPI.Data
 
         public List<Product>? GetAllProducts() => _context.ProductItems?.ToList<Product>();
 
-        public Product? GetProductById(long productId)
-        {
-            return _context.ProductItems?.FirstOrDefault(p => p.Id == productId);
-        }
+        public Product? GetProductById(long productId) => _context.ProductItems?.FirstOrDefault(p => p.Id == productId);
     }
 }

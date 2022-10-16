@@ -5,25 +5,23 @@ namespace CatalogAPI.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly IMapper _mapper;
 
-        public CatalogController(IProductService productService, IMapper mapper)
+        public CatalogController(IProductService productService)
         {
             _productService = productService;
-            _mapper = mapper;
         }
         [HttpGet]
         public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts()
         {
-            var productItems = _productService.GetAllProducts();
-            return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(productItems));
+            var productReadDtoItems = _productService.GetAllProducts();
+            return Ok(productReadDtoItems);
         }
         [HttpGet("{productId}")]
         // [Route("{productId}")]
         public ActionResult<ProductReadDto> GetProductById(long productId)
         {
-            var product = _productService.GetProductById(productId);
-            return Ok(_mapper.Map<ProductReadDto>(product));
+            var productReadDto = _productService.GetProductById(productId);
+            return Ok(productReadDto);
         }
 
 
