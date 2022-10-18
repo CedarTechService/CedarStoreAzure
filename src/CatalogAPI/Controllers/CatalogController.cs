@@ -15,7 +15,8 @@ namespace CatalogAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts()
         {
-            var productReadDtoItems = new List<ProductReadDto>();
+            List<ProductReadDto>? productReadDtoItems = null;
+            ActionResult? result;
             try
             {
                 productReadDtoItems = _productService.GetAllProducts()?.ToList();
@@ -25,8 +26,20 @@ namespace CatalogAPI.Controllers
             {
                 throw;
             }
-            return Ok(productReadDtoItems);
+            finally
+            {
+                if (productReadDtoItems is null)
+                {
+                    result = NotFound();
+                }
+                else
+                {
+                    result = Ok(productReadDtoItems);
+                }
+            }
+            return result;
         }
+
         [HttpGet("{productId}")]
         // [Route("{productId}")]
         public ActionResult<ProductReadDto> GetProductById(long productId)
@@ -40,7 +53,6 @@ namespace CatalogAPI.Controllers
             {
                 throw;
             }
-
             return Ok(productReadDto);
         }
     }

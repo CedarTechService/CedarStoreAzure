@@ -22,19 +22,37 @@ namespace CatalogAPI.Tests
             Assert.NotNull(result);
             Assert.IsType<ActionResult<IEnumerable<ProductReadDto>>>(result);
             Assert.IsType<OkObjectResult>(result?.Result);
-            // Assert.IsType<IEnumerable<ProductReadDto>>(result?.Value);
-            // Assert.Equal(2, result?.Value?.ToList().Count);
-            // Assert.Equal("Basketball", result.Value?.FirstOrDefault<Product>()?.Name);
+
+            var okResult = result?.Result as OkObjectResult; //convert type
+            var productReadDtoList = okResult?.Value as List<ProductReadDto>;
+            Assert.Equal(2, productReadDtoList?.Count);
+            Assert.Equal("Basketball", productReadDtoList?.FirstOrDefault<ProductReadDto>()?.Name);
         }
+
+        [Fact]
+        public void GetAllProducts_Returns404NotFound_WhenDBHasNotResource()
+        {
+            // Given
+            _mockProductService.Setup(repo => repo.GetAllProducts())
+                .Returns(() => null);
+            // When
+            var result = _catalogController?.GetAllProducts();
+            // Then
+            Assert.IsType<NotFoundResult>(result?.Result);
+        }
+
 
         [Fact]
         public void GetProductById_ReturnsCorrectType_WhenExistentResourceIdSubmitted()
         {
-            // _mockProductService.Setup(x => x.GetProductById(2)).Returns(() => new Product() { Id = 2, Name = "Football", Category = "Sports", Price = 29.99F });
-            // ActionResult<ProductReadDto>? result = _catalogController?.GetProductById(2);
+            _mockProductService.Setup(x => x.GetProductById(2)).Returns(() => new ProductReadDto() { Id = 2, Name = "Football", Category = "Sports", Price = 29.99F });
+            var result = _catalogController?.GetProductById(2);
 
-            // Assert.IsType<ProductReadDto>(result?.Value);
-            // Assert.Equal(2, result?.Value?.Id);
+            Assert.IsType<OkObjectResult>(result?.Result);
+
+            var okResult = result?.Result as OkObjectResult;
+            var productReadDto = okResult?.Value as ProductReadDto;
+            Assert.Equal(2, productReadDto?.Id);
         }
 
     }
