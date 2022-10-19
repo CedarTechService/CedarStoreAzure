@@ -17,14 +17,26 @@ variables:
 steps:
   - task: UseDotNet@2
   - script: dotnet build --configuration $(buildConfiguration) 
-    displayName: 'dotnet build $(buildConfiguration)'
+    displayName: 'Dotnet Build $(buildConfiguration)'
 
   - task: DotNetCoreCLI@2
-    displayName: 'dotnet test'
+    displayName: 'Dotnet Test'
     inputs:
       command: test
       projects: '**/*Tests/*.csproj'
       testRunTitle: 'xUnit Test Run'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Dotnet Publish'
+    inputs:
+      command: publish
+      publishWebProjects: false #this is critical
+      projects: 'src/CatalogAPI/*.csproj'
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifacts'
+
 
 #- task: NuGetToolInstaller@1
 
