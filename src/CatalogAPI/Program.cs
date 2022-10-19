@@ -21,7 +21,11 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-app.Services.GetService<ProductContext>()?.Database.Migrate();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ProductContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsProduction())
 {
