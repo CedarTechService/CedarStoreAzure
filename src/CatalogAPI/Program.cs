@@ -21,7 +21,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.Services.GetService<ProductContext>()?.Database.Migrate();
+
+if (app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
