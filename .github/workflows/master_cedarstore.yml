@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'CedarStore'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_576DEBD54A4D47128DC48AA0EB0E6C34 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55930DBFB6AA4550B1C6A5937E0843DB }}
           package: .
