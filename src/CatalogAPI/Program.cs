@@ -25,6 +25,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ProductContext>();
     db.Database.Migrate();
+    //test
 }
 
 // if (app.Environment.IsDevelopment())
