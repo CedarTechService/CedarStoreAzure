@@ -1,14 +1,16 @@
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace CatalogAPI.Tests
 {
     public class CatalogControllerTest
     {
         private readonly CatalogController? _catalogController;
         private readonly Mock<IProductService> _mockProductService;
-        // private ILogger<CatalogController> _logger;
+        private ILogger<CatalogController> _logger = NullLogger<CatalogController>.Instance; //ILogger mock
         public CatalogControllerTest()
         {
             _mockProductService = new Mock<IProductService>();
-            _catalogController = new CatalogController(productService: _mockProductService.Object);
+            _catalogController = new CatalogController(productService: _mockProductService.Object, _logger);
         }
 
         [Fact]
