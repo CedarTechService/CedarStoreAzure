@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLogging(lb => { lb.ClearProviders(); lb.AddConsole(); });
 
 builder.Services.AddControllers();
 
@@ -19,6 +22,13 @@ builder.Services.AddDbContext<ProductContext>(opt => opt.UseNpgsql(connStringBui
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.Audience = builder.Configuration["ResourceId"];
+        opt.Authority = $"{builder.Configuration["Instance"]}{builder.Configuration["TenantId"]}";
+    });
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -33,6 +43,9 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 // }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // app.MapGet("/", () => "Hello World!");
 app.MapControllers();

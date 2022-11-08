@@ -1,3 +1,6 @@
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
+
 namespace CatalogAPI.Controllers
 {
     [Route("api/v1/[controller]")]
@@ -5,12 +8,12 @@ namespace CatalogAPI.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly IProductService _productService;
-        // private readonly ILogger _logger;
+        private readonly ILogger<CatalogController> _logger;
 
-        public CatalogController(IProductService productService)
+        public CatalogController(IProductService productService, ILogger<CatalogController> logger)
         {
             _productService = productService;
-            // _logger = logger;
+            _logger = logger;
         }
         [HttpGet]
         public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts()
@@ -40,6 +43,7 @@ namespace CatalogAPI.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpGet("{productId}")]
         // [Route("{productId}")]
         public ActionResult<ProductReadDto> GetProductById(long productId)
